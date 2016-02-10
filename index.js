@@ -16,9 +16,9 @@ module.exports = function (options) {
 
     var tmp = path.resolve(options.tmpDir || "/tmp/soy"),
         addSoyUtils = options.hasOwnProperty("soyutils") ? options.soyutils : true,
-        compilerFlags = options.hasOwnProperty("compilerFlags") ? options.flags : [],
+        compilerFlags = options.hasOwnProperty("compilerFlags") ? options.compilerFlags : [],
         useClosure = options.hasOwnProperty("useClosure") ? options.useClosure : false,
-        soyUtilsFile = useClosure ? "soyutils_usegoog.js" : "soyutils.js";
+        soyUtilsFile = useClosure ? "soyutils_usegoog.js" : "soyutils.js",
         soyUtils = path.resolve(closureTemplates[soyUtilsFile]),
         compiler = path.resolve(closureTemplates["SoyToJsSrcCompiler.jar"]),
         files = [];
