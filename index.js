@@ -3,7 +3,6 @@ var through = require("through"),
     Buffer = require("buffer").Buffer,
     PluginError = gutil.PluginError,
     fs = require("fs"),
-    os = require("os"),
     File = gutil.File,
     closureTemplates = require("closure-templates"),
     path = require("path"),
@@ -15,10 +14,13 @@ module.exports = function (options) {
         options = {};
     }
 
-    var tmp = path.resolve(options.tmpDir || path.join(os.tmpdir(), "soy")),
+    var tmp = path.resolve(options.tmpDir || "/tmp/soy"),
         addSoyUtils = options.hasOwnProperty("soyutils") ? options.soyutils : true,
+        compilerFlags = options.hasOwnProperty("compilerFlags") ? options.flags : [],
+        useClosure = options.hasOwnProperty("useClosure") ? options.useClosure : false,
+        soyUtilsFile = useClosure ? "soyutils_usegoog.js" : "soyutils.js";
+        soyUtils = path.resolve(closureTemplates[soyUtilsFile]),
         compiler = path.resolve(closureTemplates["SoyToJsSrcCompiler.jar"]),
-        soyUtils = path.resolve(closureTemplates["soyutils.js"]),
         files = [];
 
     function write (file){
@@ -34,13 +36,17 @@ module.exports = function (options) {
     function build(self, input, output, callback) {
         var cp,
             stderr = "",
-            args = [
-                "-classpath", compiler,
+            args = [].concat(
+                "-classpath",
+                compiler,
                 "com.google.template.soy.SoyToJsSrcCompiler",
-                "--codeStyle", "concat",
-                "--outputPathFormat", output,
+                "--codeStyle",
+                "concat",
+                compilerFlags,
+                "--outputPathFormat",
+                output,
                 input
-            ];
+            );
 
         cp = spawn("java", args);
 

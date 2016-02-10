@@ -19,7 +19,12 @@ var soy = require("gulp-soy"),
     concat = require('gulp-concat');
 
 gulp.src('./templates/*.soy')
-  .pipe(soy())
+  .pipe(soy({
+    'compilerFlags' : [
+      '--shouldProvideRequireSoyNamespaces'
+    ],
+    'useClosure' : true
+  }))
   .pipe(concat("main.js"))
   .pipe(gulp.dest('./dist/'));
 ```
