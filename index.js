@@ -8,7 +8,7 @@ var through = require("through"),
     closureTemplates = require("closure-templates"),
     path = require("path"),
     spawn = require("child_process").spawn,
-    md5 = require("MD5");
+    md5 = require("md5");
 
 module.exports = function (options) {
     if (typeof options !== "object") {
